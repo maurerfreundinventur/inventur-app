@@ -325,10 +325,10 @@
       let text = `Aktive Kategorie: <b>${aktuelleKategorie}</b>`;
       if (aktiveKatIs("Holzgriffe") || aktiveKatIs("Kunststoffgriffe")) {
         text += " (automatischer Abzug: 20 Stück).";
-      } else if (aktiveKatIs("Sonstiges")) {
+      } else if (aktiveKatIs("Stützen")) {
         // Stützen
-        text += " (automatischer Abzug: 10 Stück – Stützen).";
-        // Wenn ihr später 5 wollt: hier einfach 10 -> 5 ändern
+        text += " (automatischer Abzug: 10 Stück ).";
+        
       } else {
         text += " (kein automatischer Abzug).";
       }
@@ -399,7 +399,7 @@
 
       if (aktiveKatIs("Holzgriffe") || aktiveKatIs("Kunststoffgriffe")) {
         menge -= 20;
-      } else if (aktiveKatIs("Sonstiges")) {
+      } else if (aktiveKatIs("Stützen")) {
         // Stützen: aktuell -10 Stück Abzug
         menge -= 10;
       }
@@ -434,4 +434,5 @@
   </script>
 </body>
 </html>
+
 
