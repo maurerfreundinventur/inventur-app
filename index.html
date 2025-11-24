@@ -190,14 +190,14 @@
     .result {
       margin-top: 14px;
       font-weight: 700;
-      font-size: 1.6rem;
+      font-size: 1.2rem;
       line-height: 1.4;
       text-align: center;
     }
 
     .result.error {
       font-weight: 700;
-      font-size: 1.4rem;
+      font-size: 1.1rem;
       text-align: center;
     }
 
@@ -212,7 +212,7 @@
 <body>
   <div class="app">
     <header>
-      <h1>Inventur 2025 </h1>
+      <h1>Inventur 2025</h1>
     </header>
 
     <div class="card">
@@ -236,7 +236,7 @@
         </div>
 
         <div class="active-category-info" id="wiegen-kat-info">
-          Aktive Kategorie: <b>Holzgriffe</b> (automatischer Abzug: 20 Stück).
+          Aktive Kategorie: <b>Holzgriffe</b> (automatischer Sicherheitsabzug: 20 Stück).
         </div>
 
         <div class="field">
@@ -273,7 +273,7 @@
 
         <p class="hint">
           Stapelhöhe (mm) / Blechdicke (mm) = Stückzahl.<br />
-          Es werden automatisch 5 Stück abgezogen.
+          Es werden 5 Stück als Sicherheitsabzug berücksichtigt.
         </p>
 
         <div class="field">
@@ -295,7 +295,7 @@
       </div>
     </div>
 
-    <footer>Version 1.0 </footer>
+    <footer>Version 1.1 – Sicherheitsabzug sichtbar</footer>
   </div>
 
   <script>
@@ -321,16 +321,26 @@
       return aktuelleKategorie === name;
     }
 
-    function updateKatInfo() {
-      let text = `Aktive Kategorie: <b>${aktuelleKategorie}</b>`;
+    function getSicherheitsabzugWiegen() {
       if (aktiveKatIs("Holzgriffe") || aktiveKatIs("Kunststoffgriffe")) {
-        text += " (automatischer Abzug: 20 Stück).";
+        return 20;
+      } else if (aktiveKatIs("Endkappen") || aktiveKatIs("Muttern")) {
+        return 50;
+      } else if (aktiveKatIs("Angeln")) {
+        return 15;
       } else if (aktiveKatIs("Stützen")) {
-        // Stützen
-        text += " (automatischer Abzug: 10 Stück ).";
-        
+        return 10;
+      }
+      return 0;
+    }
+
+    function updateKatInfo() {
+      const abzug = getSicherheitsabzugWiegen();
+      let text = `Aktive Kategorie: <b>${aktuelleKategorie}</b>`;
+      if (abzug > 0) {
+        text += ` (automatischer Sicherheitsabzug: ${abzug} Stück).`;
       } else {
-        text += " (kein automatischer Abzug).";
+        text += " (kein Sicherheitsabzug).";
       }
       katInfo.innerHTML = text;
     }
@@ -395,19 +405,16 @@
       }
 
       const mengeFloat = (nettoKg * 1000) / stueckGew;
-      let menge = Math.round(mengeFloat);
+      const tatsaechlicheMenge = Math.round(mengeFloat);
 
-      if (aktiveKatIs("Holzgriffe") || aktiveKatIs("Kunststoffgriffe")) {
-        menge -= 20;
-      } else if (aktiveKatIs("Stützen")) {
-        // Stützen: aktuell -10 Stück Abzug
-        menge -= 10;
-      }
-
-      if (menge < 0) menge = 0;
+      const abzug = getSicherheitsabzugWiegen();
+      let mengeNachAbzug = tatsaechlicheMenge - abzug;
+      if (mengeNachAbzug < 0) mengeNachAbzug = 0;
 
       resultDiv.classList.remove("error");
-      resultDiv.textContent = menge + " Stück";
+      resultDiv.innerHTML =
+        "Tatsächliche Menge: " + tatsaechlicheMenge + " Stück<br>" +
+        "Menge nach Sicherheitsabzug: " + mengeNachAbzug + " Stück";
     });
 
     // Messen – Berechnung
@@ -422,17 +429,19 @@
         return;
       }
 
-      const mengeFloat = stapel / dicke;
-      let menge = Math.round(mengeFloat);
+      const sicherheitsAbzug = 5;
 
-      menge -= 5;
-      if (menge < 0) menge = 0;
+      const mengeFloat = stapel / dicke;
+      const tatsaechlicheMenge = Math.round(mengeFloat);
+
+      let mengeNachAbzug = tatsaechlicheMenge - sicherheitsAbzug;
+      if (mengeNachAbzug < 0) mengeNachAbzug = 0;
 
       resultDiv.classList.remove("error");
-      resultDiv.textContent = menge + " Stück";
+      resultDiv.innerHTML =
+        "Tatsächliche Menge: " + tatsaechlicheMenge + " Stück<br>" +
+        "Menge nach Sicherheitsabzug: " + mengeNachAbzug + " Stück";
     });
   </script>
 </body>
 </html>
-
-
