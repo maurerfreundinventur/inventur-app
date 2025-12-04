@@ -59,7 +59,6 @@
       padding: 12px;
     }
 
-    /* Tabs (Wiegen / Messen) */
     .tabs {
       display: flex;
       gap: 4px;
@@ -104,7 +103,6 @@
       line-height: 1.4;
     }
 
-    /* Kategorien beim Wiegen */
     .subtabs {
       display: flex;
       flex-wrap: wrap;
@@ -182,23 +180,15 @@
       color: #111827;
     }
 
-    .actions button:active {
-      transform: translateY(1px);
-    }
-
-    /* Ergebnis groß, fett, zentriert */
     .result {
       margin-top: 14px;
       font-weight: 700;
       font-size: 1.2rem;
-      line-height: 1.4;
       text-align: center;
     }
 
     .result.error {
-      font-weight: 700;
       font-size: 1.1rem;
-      text-align: center;
     }
 
     footer {
@@ -209,6 +199,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="app">
     <header>
@@ -231,6 +222,11 @@
           <button data-kat="Kunststoffgriffe">Kunststoffgriffe</button>
           <button data-kat="Endkappen">Endkappen</button>
           <button data-kat="Muttern">Muttern</button>
+
+          <!-- NEU -->
+          <button data-kat="Schweißbolzen">Schweißbolzen</button>
+          <button data-kat="Schrauben/Bolzen">Schrauben/Bolzen</button>
+
           <button data-kat="Angeln">Angeln</button>
           <button data-kat="Stützen">Stützen</button>
         </div>
@@ -261,7 +257,7 @@
 
         <div class="actions">
           <button id="btn-wiegen-berechnen">Menge berechnen</button>
-          <button id="btn-wiegen-reset" class="secondary" type="button">Eingabe zurücksetzen</button>
+          <button id="btn-wiegen-reset" class="secondary">Eingabe zurücksetzen</button>
         </div>
 
         <div id="w-result" class="result"></div>
@@ -273,7 +269,7 @@
 
         <p class="hint">
           Stapelhöhe (mm) / Blechdicke (mm) = Stückzahl.<br />
-          Es werden 5 Stück als Sicherheitsabzug berücksichtigt.
+          Es werden 5 Stück Sicherheitsabzug berücksichtigt.
         </p>
 
         <div class="field">
@@ -288,18 +284,18 @@
 
         <div class="actions">
           <button id="btn-messen-berechnen">Menge berechnen</button>
-          <button id="btn-messen-reset" class="secondary" type="button">Eingabe zurücksetzen</button>
+          <button id="btn-messen-reset" class="secondary">Eingabe zurücksetzen</button>
         </div>
 
         <div id="m-result" class="result"></div>
       </div>
     </div>
 
-    <footer>Version 1.0 </footer>
+    <footer>Version 1.0</footer>
   </div>
 
   <script>
-    // Tabs (Wiegen / Messen)
+    // Tabs
     const tabButtons = document.querySelectorAll(".tabs button");
     const tabs = document.querySelectorAll(".tab");
 
@@ -312,7 +308,7 @@
       });
     });
 
-    // Kategorien für Wiegen
+    // Kategorien
     const katButtons = document.querySelectorAll("#wiegen-kategorien button");
     const katInfo = document.getElementById("wiegen-kat-info");
     let aktuelleKategorie = "Holzgriffe";
@@ -324,7 +320,12 @@
     function getSicherheitsabzugWiegen() {
       if (aktiveKatIs("Holzgriffe") || aktiveKatIs("Kunststoffgriffe")) {
         return 20;
-      } else if (aktiveKatIs("Endkappen") || aktiveKatIs("Muttern")) {
+      } else if (
+        aktiveKatIs("Endkappen") ||
+        aktiveKatIs("Muttern") ||
+        aktiveKatIs("Schweißbolzen") ||
+        aktiveKatIs("Schrauben/Bolzen")
+      ) {
         return 50;
       } else if (aktiveKatIs("Angeln")) {
         return 15;
@@ -336,13 +337,8 @@
 
     function updateKatInfo() {
       const abzug = getSicherheitsabzugWiegen();
-      let text = `Aktive Kategorie: <b>${aktuelleKategorie}</b>`;
-      if (abzug > 0) {
-        text += ` (automatischer Sicherheitsabzug: ${abzug} Stück).`;
-      } else {
-        text += " (kein Sicherheitsabzug).";
-      }
-      katInfo.innerHTML = text;
+      katInfo.innerHTML =
+        `Aktive Kategorie: <b>${aktuelleKategorie}</b> (automatischer Sicherheitsabzug: ${abzug} Stück).`;
     }
 
     katButtons.forEach((btn) => {
@@ -361,7 +357,7 @@
       return raw === "" ? NaN : parseFloat(raw);
     }
 
-    // Reset-Funktionen
+    // Reset Wiegen
     function resetWiegen() {
       document.getElementById("w-gewicht").value = "";
       document.getElementById("w-tara").value = "";
@@ -372,18 +368,9 @@
       res.classList.remove("error");
     }
 
-    function resetMessen() {
-      document.getElementById("m-stapelhoehe").value = "";
-      document.getElementById("m-blechdicke").value = "";
-      const res = document.getElementById("m-result");
-      res.textContent = "";
-      res.classList.remove("error");
-    }
-
     document.getElementById("btn-wiegen-reset").addEventListener("click", resetWiegen);
-    document.getElementById("btn-messen-reset").addEventListener("click", resetMessen);
 
-    // Wiegen – Berechnung
+    // Berechnung Wiegen
     document.getElementById("btn-wiegen-berechnen").addEventListener("click", () => {
       const gewicht = parseNumberInput("w-gewicht");
       const tara = parseNumberInput("w-tara");
@@ -413,11 +400,21 @@
 
       resultDiv.classList.remove("error");
       resultDiv.innerHTML =
-        "Tatsächliche Menge: " + tatsaechlicheMenge + " Stück<br>" +
-        "Menge nach Sicherheitsabzug: " + mengeNachAbzug + " Stück";
+        `Tatsächliche Menge: ${tatsaechlicheMenge} Stück<br>Menge nach Sicherheitsabzug: ${mengeNachAbzug} Stück`;
     });
 
-    // Messen – Berechnung
+    // Reset Messen
+    function resetMessen() {
+      document.getElementById("m-stapelhoehe").value = "";
+      document.getElementById("m-blechdicke").value = "";
+      const res = document.getElementById("m-result");
+      res.textContent = "";
+      res.classList.remove("error");
+    }
+
+    document.getElementById("btn-messen-reset").addEventListener("click", resetMessen);
+
+    // Berechnung Messen
     document.getElementById("btn-messen-berechnen").addEventListener("click", () => {
       const stapel = parseNumberInput("m-stapelhoehe");
       const dicke = parseNumberInput("m-blechdicke");
@@ -430,7 +427,6 @@
       }
 
       const sicherheitsAbzug = 5;
-
       const mengeFloat = stapel / dicke;
       const tatsaechlicheMenge = Math.round(mengeFloat);
 
@@ -439,11 +435,8 @@
 
       resultDiv.classList.remove("error");
       resultDiv.innerHTML =
-        "Tatsächliche Menge: " + tatsaechlicheMenge + " Stück<br>" +
-        "Menge nach Sicherheitsabzug: " + mengeNachAbzug + " Stück";
+        `Tatsächliche Menge: ${tatsaechlicheMenge} Stück<br>Menge nach Sicherheitsabzug: ${mengeNachAbzug} Stück`;
     });
   </script>
 </body>
 </html>
-
-
