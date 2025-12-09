@@ -2,9 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <title>Inventur 2025 – Wiegen &amp; Messen</title>
-
-  <!-- wichtig für Handy -->
+  <title>Inventur 2025 – Wiegen & Messen</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
@@ -18,14 +16,15 @@
       --text-muted: #6b7280;
     }
 
-    * {
+    *,
+    *::before,
+    *::after {
       box-sizing: border-box;
     }
 
     body {
       margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-        sans-serif;
+      font-family: system-ui, sans-serif;
       background: var(--bg);
       color: var(--primary);
     }
@@ -34,21 +33,6 @@
       max-width: 520px;
       margin: 0 auto;
       padding: 16px;
-    }
-
-    header {
-      margin-bottom: 16px;
-    }
-
-    header h1 {
-      font-size: 1.4rem;
-      margin: 0 0 4px 0;
-    }
-
-    header p {
-      margin: 0;
-      font-size: 0.85rem;
-      color: var(--text-muted);
     }
 
     .card {
@@ -78,36 +62,30 @@
     .tabs button.active {
       background: var(--accent);
       color: #ffffff;
-      border-color: var(--accent);
-      font-weight: 600;
-    }
-
-    .tab {
-      display: none;
-      padding-top: 8px;
-    }
-
-    .tab.active {
-      display: block;
-    }
-
-    h2 {
-      font-size: 1rem;
-      margin: 0 0 4px 0;
-    }
-
-    .hint {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      margin-bottom: 10px;
-      line-height: 1.4;
     }
 
     .subtabs {
       display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .kat-main {
+      display: flex;
       flex-wrap: wrap;
       gap: 6px;
-      margin: 4px 0 10px;
+    }
+
+    .kat-kst {
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .kat-kst button {
+      background: #e0f2fe;
+      border-color: #0284c7;
+      font-weight: 400;
     }
 
     .subtabs button {
@@ -115,22 +93,19 @@
       border-radius: 999px;
       border: 1px solid var(--border);
       background: #f9fafb;
-      font-size: 0.8rem;
       cursor: pointer;
+      font-size: 0.8rem;
     }
 
     .subtabs button.active {
       background: var(--accent-soft);
       border-color: var(--accent);
-      color: var(--primary);
-      font-weight: 600;
     }
 
     .active-category-info {
       font-size: 0.78rem;
       color: var(--text-muted);
       margin-bottom: 10px;
-      line-height: 1.4;
     }
 
     .field {
@@ -143,7 +118,7 @@
       margin-bottom: 2px;
     }
 
-    .field input[type="number"] {
+    .field input {
       width: 100%;
       padding: 8px 10px;
       border-radius: 8px;
@@ -151,16 +126,10 @@
       font-size: 0.9rem;
     }
 
-    .field input:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.2);
-    }
-
     .actions {
-      margin-top: 10px;
       display: flex;
       gap: 8px;
+      margin-top: 22px;
     }
 
     .actions button {
@@ -169,15 +138,14 @@
       border-radius: 999px;
       border: none;
       background: var(--accent);
-      color: #ffffff;
+      color: white;
       font-size: 0.95rem;
-      font-weight: 600;
       cursor: pointer;
     }
 
     .actions button.secondary {
       background: #e5e7eb;
-      color: #111827;
+      color: #111;
     }
 
     .result {
@@ -187,8 +155,9 @@
       text-align: center;
     }
 
-    .result.error {
-      font-size: 1.1rem;
+    .result-after {
+      font-size: 1.2rem;
+      font-weight: 700;
     }
 
     footer {
@@ -201,242 +170,167 @@
 </head>
 
 <body>
-  <div class="app">
-    <header>
-      <h1>Inventur 2025</h1>
-    </header>
+<div class="app">
 
-    <div class="card">
-      <div class="tabs">
-        <button data-tab="tab-wiegen" class="active">Wiegen</button>
-        <button data-tab="tab-messen">Messen</button>
+  <header>
+    <h1>Inventur 2025</h1>
+  </header>
+
+  <div class="card">
+    <div class="tabs">
+      <button class="active">Wiegen</button>
+      <button>Messen</button>
+    </div>
+
+    <h2>Wiegen (Schüttware)</h2>
+
+    <div class="subtabs" id="wiegen-kategorien">
+      <div class="kat-main">
+        <button data-kat="Holzgriffe" class="active">Holzgriffe</button>
+        <button data-kat="Kunststoffgriffe">Kunststoffgriffe</button>
+        <button data-kat="Endkappen">Endkappen</button>
+        <button data-kat="Muttern">Muttern</button>
+        <button data-kat="Schweißbolzen">Schweißbolzen</button>
+        <button data-kat="Schrauben/Bolzen">Schrauben/Bolzen</button>
+        <button data-kat="Angeln">Angeln</button>
+        <button data-kat="Stützen">Stützen</button>
       </div>
 
-      <!-- WIEGEN -->
-      <div id="tab-wiegen" class="tab active">
-        <h2>Wiegen (Schüttware)</h2>
-
-        <!-- Kategorien -->
-        <div class="subtabs" id="wiegen-kategorien">
-          <button data-kat="Holzgriffe" class="active">Holzgriffe</button>
-          <button data-kat="Kunststoffgriffe">Kunststoffgriffe</button>
-          <button data-kat="Endkappen">Endkappen</button>
-          <button data-kat="Muttern">Muttern</button>
-
-          <!-- NEU -->
-          <button data-kat="Schweißbolzen">Schweißbolzen</button>
-          <button data-kat="Schrauben/Bolzen">Schrauben/Bolzen</button>
-
-          <button data-kat="Angeln">Angeln</button>
-          <button data-kat="Stützen">Stützen</button>
-        </div>
-
-        <div class="active-category-info" id="wiegen-kat-info">
-          Aktive Kategorie: <b>Holzgriffe</b> (automatischer Sicherheitsabzug: 20 Stück).
-        </div>
-
-        <div class="field">
-          <label for="w-gewicht">Gesamtgewicht inkl. Verpackung (kg)</label>
-          <input type="number" id="w-gewicht" step="0.01" inputmode="decimal" />
-        </div>
-
-        <div class="field">
-          <label for="w-tara">Gewicht der Verpackung (Tara, kg pro Einheit)</label>
-          <input type="number" id="w-tara" step="0.01" inputmode="decimal" />
-        </div>
-
-        <div class="field">
-          <label for="w-kisten">Anzahl Einheiten (Kisten/Kartons)</label>
-          <input type="number" id="w-kisten" step="1" value="1" inputmode="numeric" />
-        </div>
-
-        <div class="field">
-          <label for="w-stueckgewicht">Gewicht pro Stück (g)</label>
-          <input type="number" id="w-stueckgewicht" step="0.01" inputmode="decimal" />
-        </div>
-
-        <div class="actions">
-          <button id="btn-wiegen-berechnen">Menge berechnen</button>
-          <button id="btn-wiegen-reset" class="secondary">Eingabe zurücksetzen</button>
-        </div>
-
-        <div id="w-result" class="result"></div>
-      </div>
-
-      <!-- MESSEN -->
-      <div id="tab-messen" class="tab">
-        <h2>Messen (Bleche)</h2>
-
-        <p class="hint">
-          Stapelhöhe (mm) / Blechdicke (mm) = Stückzahl.<br />
-          Es werden 5 Stück Sicherheitsabzug berücksichtigt.
-        </p>
-
-        <div class="field">
-          <label for="m-stapelhoehe">Stapel-Höhe (mm)</label>
-          <input type="number" id="m-stapelhoehe" step="0.01" inputmode="decimal" />
-        </div>
-
-        <div class="field">
-          <label for="m-blechdicke">Blechdicke (mm)</label>
-          <input type="number" id="m-blechdicke" step="0.001" inputmode="decimal" />
-        </div>
-
-        <div class="actions">
-          <button id="btn-messen-berechnen">Menge berechnen</button>
-          <button id="btn-messen-reset" class="secondary">Eingabe zurücksetzen</button>
-        </div>
-
-        <div id="m-result" class="result"></div>
+      <div class="kat-kst">
+        <button data-kat="KST">KST (Kunststofftechnik)</button>
       </div>
     </div>
 
-    <footer>Version 1.0</footer>
+    <div class="active-category-info" id="wiegen-kat-info"></div>
+
+    <div class="field">
+      <label>Gesamtgewicht inkl. Verpackung (kg)</label>
+      <input type="number" id="w-gewicht">
+    </div>
+
+    <div class="field">
+      <label>Gewicht der Verpackung (Tara, kg pro Einheit)</label>
+      <input type="number" id="w-tara">
+    </div>
+
+    <div class="field">
+      <label>Anzahl Einheiten</label>
+      <input type="number" id="w-kisten" value="1">
+    </div>
+
+    <div class="field">
+      <label>Gewicht pro Stück (g)</label>
+      <input type="number" id="w-stueckgewicht">
+    </div>
+
+    <div class="actions">
+      <button id="btn-wiegen-berechnen">Menge berechnen</button>
+      <button id="btn-wiegen-reset" class="secondary">Zurücksetzen</button>
+    </div>
+
+    <div id="w-result" class="result"></div>
   </div>
 
-  <script>
-    // Tabs
-    const tabButtons = document.querySelectorAll(".tabs button");
-    const tabs = document.querySelectorAll(".tab");
+  <footer>Version 1.0</footer>
+</div>
 
-    tabButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        tabButtons.forEach((b) => b.classList.remove("active"));
-        tabs.forEach((t) => t.classList.remove("active"));
-        btn.classList.add("active");
-        document.getElementById(btn.dataset.tab).classList.add("active");
-      });
+<script>
+  const katButtons = document.querySelectorAll("#wiegen-kategorien button");
+  const katInfo = document.getElementById("wiegen-kat-info");
+  let aktuelleKategorie = "Holzgriffe";
+
+  function aktiveKatIs(name) {
+    return aktuelleKategorie === name;
+  }
+
+  function getSicherheitsabzugWiegen() {
+    if (aktiveKatIs("Holzgriffe") || aktiveKatIs("Kunststoffgriffe")) return 20;
+    if (aktiveKatIs("KST")) return 0;
+    if (
+      aktiveKatIs("Endkappen") ||
+      aktiveKatIs("Muttern") ||
+      aktiveKatIs("Schweißbolzen") ||
+      aktiveKatIs("Schrauben/Bolzen")
+    ) return 50;
+    if (aktiveKatIs("Angeln")) return 15;
+    if (aktiveKatIs("Stützen")) return 10;
+    return 0;
+  }
+
+  function updateKatInfo() {
+    const abzug = getSicherheitsabzugWiegen();
+    let text = `Aktive Kategorie: <b>${aktuelleKategorie}</b> `;
+    if (abzug > 0) text += `(automatischer Sicherheitsabzug: ${abzug} Stück).`;
+    else text += `(kein automatischer Sicherheitsabzug).`;
+    katInfo.innerHTML = text;
+  }
+
+  katButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      katButtons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      aktuelleKategorie = btn.dataset.kat;
+      updateKatInfo();
     });
+  });
 
-    // Kategorien
-    const katButtons = document.querySelectorAll("#wiegen-kategorien button");
-    const katInfo = document.getElementById("wiegen-kat-info");
-    let aktuelleKategorie = "Holzgriffe";
+  updateKatInfo();
 
-    function aktiveKatIs(name) {
-      return aktuelleKategorie === name;
+  function parseNumberInput(id) {
+    const raw = document.getElementById(id).value.replace(",", ".");
+    return raw === "" ? NaN : parseFloat(raw);
+  }
+
+  function berechneWiegen() {
+    const gewicht = parseNumberInput("w-gewicht");
+    const tara = parseNumberInput("w-tara");
+    const kisten = parseNumberInput("w-kisten");
+    const stueckGew = parseNumberInput("w-stueckgewicht");
+    const resultDiv = document.getElementById("w-result");
+
+    if (isNaN(gewicht) || isNaN(tara) || isNaN(kisten) || isNaN(stueckGew)) {
+      resultDiv.textContent = "Bitte alle Werte korrekt eingeben.";
+      return;
     }
 
-    function getSicherheitsabzugWiegen() {
-      if (aktiveKatIs("Holzgriffe") || aktiveKatIs("Kunststoffgriffe")) {
-        return 20;
-      } else if (
-        aktiveKatIs("Endkappen") ||
-        aktiveKatIs("Muttern") ||
-        aktiveKatIs("Schweißbolzen") ||
-        aktiveKatIs("Schrauben/Bolzen")
-      ) {
-        return 50;
-      } else if (aktiveKatIs("Angeln")) {
-        return 15;
-      } else if (aktiveKatIs("Stützen")) {
-        return 10;
+    const nettoKg = gewicht - tara * kisten;
+    if (nettoKg <= 0) {
+      resultDiv.textContent = "Netto-Gewicht ist ≤ 0 kg.";
+      return;
+    }
+
+    const menge = Math.round((nettoKg * 1000) / stueckGew);
+
+    if (aktiveKatIs("KST")) {
+      resultDiv.innerHTML = `Menge: ${menge} Stück`;
+      return;
+    }
+
+    const abzug = getSicherheitsabzugWiegen();
+    const finalMenge = Math.max(menge - abzug, 0);
+
+    resultDiv.innerHTML =
+      `Tatsächliche Menge: ${menge} Stück<br>
+       <span class="result-after">Menge nach Sicherheitsabzug: ${finalMenge} Stück</span>`;
+  }
+
+  document.getElementById("btn-wiegen-berechnen").addEventListener("click", berechneWiegen);
+
+  document.getElementById("btn-wiegen-reset").addEventListener("click", () => {
+    ["w-gewicht","w-tara","w-stueckgewicht"].forEach(id => document.getElementById(id).value = "");
+    document.getElementById("w-kisten").value = 1;
+    document.getElementById("w-result").innerHTML = "";
+  });
+
+  document.querySelectorAll("#w-gewicht, #w-tara, #w-kisten, #w-stueckgewicht").forEach(input => {
+    input.addEventListener("keydown", e => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        berechneWiegen();
       }
-      return 0;
-    }
-
-    function updateKatInfo() {
-      const abzug = getSicherheitsabzugWiegen();
-      katInfo.innerHTML =
-        `Aktive Kategorie: <b>${aktuelleKategorie}</b> (automatischer Sicherheitsabzug: ${abzug} Stück).`;
-    }
-
-    katButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        katButtons.forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
-        aktuelleKategorie = btn.dataset.kat;
-        updateKatInfo();
-      });
     });
+  });
+</script>
 
-    updateKatInfo();
-
-    function parseNumberInput(id) {
-      const raw = document.getElementById(id).value.replace(",", ".");
-      return raw === "" ? NaN : parseFloat(raw);
-    }
-
-    // Reset Wiegen
-    function resetWiegen() {
-      document.getElementById("w-gewicht").value = "";
-      document.getElementById("w-tara").value = "";
-      document.getElementById("w-kisten").value = "1";
-      document.getElementById("w-stueckgewicht").value = "";
-      const res = document.getElementById("w-result");
-      res.textContent = "";
-      res.classList.remove("error");
-    }
-
-    document.getElementById("btn-wiegen-reset").addEventListener("click", resetWiegen);
-
-    // Berechnung Wiegen
-    document.getElementById("btn-wiegen-berechnen").addEventListener("click", () => {
-      const gewicht = parseNumberInput("w-gewicht");
-      const tara = parseNumberInput("w-tara");
-      const kisten = parseNumberInput("w-kisten");
-      const stueckGew = parseNumberInput("w-stueckgewicht");
-      const resultDiv = document.getElementById("w-result");
-
-      if (isNaN(gewicht) || isNaN(tara) || isNaN(kisten) || isNaN(stueckGew)) {
-        resultDiv.textContent = "Bitte alle Werte korrekt eingeben.";
-        resultDiv.classList.add("error");
-        return;
-      }
-
-      const nettoKg = gewicht - tara * kisten;
-      if (nettoKg <= 0) {
-        resultDiv.textContent = "Netto-Gewicht ist ≤ 0 kg. Eingaben prüfen.";
-        resultDiv.classList.add("error");
-        return;
-      }
-
-      const mengeFloat = (nettoKg * 1000) / stueckGew;
-      const tatsaechlicheMenge = Math.round(mengeFloat);
-
-      const abzug = getSicherheitsabzugWiegen();
-      let mengeNachAbzug = tatsaechlicheMenge - abzug;
-      if (mengeNachAbzug < 0) mengeNachAbzug = 0;
-
-      resultDiv.classList.remove("error");
-      resultDiv.innerHTML =
-        `Tatsächliche Menge: ${tatsaechlicheMenge} Stück<br>Menge nach Sicherheitsabzug: ${mengeNachAbzug} Stück`;
-    });
-
-    // Reset Messen
-    function resetMessen() {
-      document.getElementById("m-stapelhoehe").value = "";
-      document.getElementById("m-blechdicke").value = "";
-      const res = document.getElementById("m-result");
-      res.textContent = "";
-      res.classList.remove("error");
-    }
-
-    document.getElementById("btn-messen-reset").addEventListener("click", resetMessen);
-
-    // Berechnung Messen
-    document.getElementById("btn-messen-berechnen").addEventListener("click", () => {
-      const stapel = parseNumberInput("m-stapelhoehe");
-      const dicke = parseNumberInput("m-blechdicke");
-      const resultDiv = document.getElementById("m-result");
-
-      if (isNaN(stapel) || isNaN(dicke) || dicke <= 0) {
-        resultDiv.textContent = "Bitte Stapel-Höhe und Blechdicke korrekt eingeben.";
-        resultDiv.classList.add("error");
-        return;
-      }
-
-      const sicherheitsAbzug = 5;
-      const mengeFloat = stapel / dicke;
-      const tatsaechlicheMenge = Math.round(mengeFloat);
-
-      let mengeNachAbzug = tatsaechlicheMenge - sicherheitsAbzug;
-      if (mengeNachAbzug < 0) mengeNachAbzug = 0;
-
-      resultDiv.classList.remove("error");
-      resultDiv.innerHTML =
-        `Tatsächliche Menge: ${tatsaechlicheMenge} Stück<br>Menge nach Sicherheitsabzug: ${mengeNachAbzug} Stück`;
-    });
-  </script>
 </body>
 </html>
